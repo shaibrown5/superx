@@ -10,6 +10,7 @@ import xml.etree.ElementTree as ET
 from decimal import Decimal
 from bs4 import BeautifulSoup  # pylint: disable=import-error
 import requests  # pylint: disable=import-error
+
 # adds the path to system so that the script can run
 add_to_python_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..')
 sys.path.append(add_to_python_path)
@@ -67,8 +68,8 @@ class InfoExtractor:
                 if branch_id == '86' and self.current_super['store_name'] == 'victory':
                     continue
 
-                product_info_list, branch_price_list = self.fill_product_and_branch_price_tables(xml_info_list,
-                                                                                                 branch_id)
+                product_info_list, branch_price_list = self.fill_product_and_branch_price_tables(
+                                                                        xml_info_list, branch_id)
                 session.bulk_save_objects(product_info_list)
                 session.bulk_save_objects(branch_price_list)
                 session.flush()
@@ -143,7 +144,7 @@ class InfoExtractor:
         """
         This method iterates over all items in the supermarket and extracts the relevant data
         The data is then committed packed into a tuple and placed in a list of all the info tuples
-        :param xml_info_child_node: The child of the parsed xml tree containing all item information
+        :param xml_info_child_node: The child of the parsed xml tree containing all item info
         :return: a list of tuples containing the information
         """
         item_attr_name = self.current_super['item_attr_name']
@@ -192,14 +193,17 @@ class InfoExtractor:
             # pylint: disable=line-too-long
             # If the item is in the db , skip it
             if item_code not in self.item_id_set:
-                product_info_list.append(Product(id=item_code, name=item_name, quantity=quantity,
+                product_info_list.append(Product(id=item_code,
+                                                 name=item_name,
+                                                 quantity=quantity,
                                                  is_weighted=is_weighted,
                                                  unit_of_measure=unit_of_measure))
                 self.item_id_set.add(item_code)
 
             branch_price_list.append(BranchPrice(chain_id=self.current_super['chain_id'],
                                                  branch_id=branch_id,
-                                                 item_code=item_code, price=price,
+                                                 item_code=item_code,
+                                                 price=price,
                                                  update_date=update_date))
 
         return product_info_list, branch_price_list
