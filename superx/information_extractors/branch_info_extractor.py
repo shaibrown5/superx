@@ -56,7 +56,9 @@ class BranchExtractor:
                 xml_info_list = self.extract_info_from_xml(xml_file)
                 branch_list = self.fill_branch_table(xml_info_list)
                 session.bulk_save_objects(branch_list)
-                session.commit()
+                session.flush()
+
+        # session.commit()
 
     def get_zip_file_link(self):
         """

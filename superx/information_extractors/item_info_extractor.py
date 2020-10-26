@@ -74,7 +74,7 @@ class InfoExtractor:
                 session.bulk_save_objects(branch_price_list)
                 session.flush()
 
-        session.commit()
+        # session.commit()
 
     def get_zip_file_links(self, url_list):
         """
